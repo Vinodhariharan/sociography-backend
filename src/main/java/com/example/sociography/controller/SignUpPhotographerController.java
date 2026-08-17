@@ -15,7 +15,6 @@ import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/signup")
-@CrossOrigin(origins = "http://localhost:3000/")
 public class SignUpPhotographerController {
 
     @Autowired
