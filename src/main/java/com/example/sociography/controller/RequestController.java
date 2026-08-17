@@ -62,11 +62,8 @@ public class RequestController {
     
     @PutMapping("/{id}/status")
     public ResponseEntity<Request> updateRequestStatus(@PathVariable Integer id, @RequestBody String status) {
-        return requestService.findById(id)
-            .map(existingRequest -> {
-                existingRequest.setStatus(status);
-                return ResponseEntity.ok(requestService.save(existingRequest));
-            }).orElseGet(() -> ResponseEntity.notFound().build());
+        Request updated = requestService.updateRequestStatus(id, status);
+        return updated != null ? ResponseEntity.ok(updated) : ResponseEntity.notFound().build();
     }
 
 }

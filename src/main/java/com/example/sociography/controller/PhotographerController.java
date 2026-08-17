@@ -7,6 +7,7 @@ import com.example.sociography.model.Picture;
 import com.example.sociography.service.PhotographerService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,11 @@ public class PhotographerController {
     @GetMapping
     public List<Photographer> getAllPhotographers() {
         return photographerService.findAll();
+    }
+
+    @GetMapping("/page")
+    public Page<Photographer> getPaginatedPhotographers(@RequestParam int page, @RequestParam int size) {
+        return photographerService.findPaginated(page, size);
     }
 
     @GetMapping("/{id}")

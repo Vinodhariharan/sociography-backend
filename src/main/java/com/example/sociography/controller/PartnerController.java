@@ -3,11 +3,11 @@ package com.example.sociography.controller;
 import com.example.sociography.model.Partner;
 import com.example.sociography.service.PartnerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/partners")
@@ -21,14 +21,16 @@ public class PartnerController {
         return partnerService.findAll();
     }
 
+    @GetMapping("/page")
+    public Page<Partner> getPaginatedPartners(@RequestParam int page, @RequestParam int size) {
+        return partnerService.findPaginated(page, size);
+    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Partner>> getPartnerById1(@PathVariable Integer id) {
-        Optional<Partner> partner = partnerService.findById(id); // Fetch partner by ID
-        if (partner != null) {
-            return ResponseEntity.ok(partner);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Partner> getPartnerById(@PathVariable Integer id) {
+        return partnerService.findById(id)
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
