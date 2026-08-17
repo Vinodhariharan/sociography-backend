@@ -21,7 +21,7 @@ public class JwtUtil {
                 .claim("role", role)
                 .claim("id", id) // Add the id claim
                 .setIssuedAt(new Date())
-//                .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 day expiration
+                .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 day expiration
                 .signWith(SignatureAlgorithm.HS512, secretKey)
                 .compact();
     }

@@ -2,6 +2,7 @@ package com.example.sociography.filter;
 
 import com.example.sociography.util.JwtUtil;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,7 +32,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
-            username = jwtUtil.extractUsername(jwt);
+            try {
+                username = jwtUtil.extractUsername(jwt);
+            } catch (JwtException e) {
+                // Expired, malformed, or tampered token - leave username null so the
+                // request proceeds unauthenticated and is rejected downstream with 401.
+            }
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
