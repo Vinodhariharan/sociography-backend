@@ -2,6 +2,8 @@ package com.example.sociography.controller;
 
 import com.example.sociography.model.Follower;
 import com.example.sociography.service.FollowerService;
+import com.example.sociography.util.AuthenticatedUser;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,8 +55,12 @@ public class FollowerController {
     @PostMapping("/toggle-follow")
     public ResponseEntity<String> toggleFollow(
             @RequestParam int followerId,
-            @RequestParam int followingId) {
-        boolean followed = followerService.toggleFollow(followerId, followingId);
+            @RequestParam int followingId,
+            HttpServletRequest request) {
+        // followerId is who is doing the following - always the authenticated
+        // caller, never a client-supplied id, so one user can't follow/unfollow
+        // on behalf of another.
+        boolean followed = followerService.toggleFollow(AuthenticatedUser.getId(request), followingId);
         if (followed) {
             return ResponseEntity.ok("Followed successfully");
         } else {

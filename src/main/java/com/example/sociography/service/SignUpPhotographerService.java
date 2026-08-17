@@ -3,20 +3,20 @@ package com.example.sociography.service;
 import com.example.sociography.model.Photographer;
 import com.example.sociography.repository.SignUpPhotographerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SignUpPhotographerService {
 
-	@Autowired
-    private SignUpPhotographerRepo signUpPhotographerRepo;
-    private BCryptPasswordEncoder passwordEncoder;
+    private final SignUpPhotographerRepo signUpPhotographerRepo;
+    private final PasswordEncoder passwordEncoder;
 
-//    public SignUpPhotographerService(SignUpPhotographerRepo signUpPhotographerRepo, BCryptPasswordEncoder passwordEncoder) {
-//        this.signUpPhotographerRepo = signUpPhotographerRepo;
-//        this.passwordEncoder = passwordEncoder;
-//    }
+    @Autowired
+    public SignUpPhotographerService(SignUpPhotographerRepo signUpPhotographerRepo, PasswordEncoder passwordEncoder) {
+        this.signUpPhotographerRepo = signUpPhotographerRepo;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public Photographer signUpPhotographer(Photographer photographer) throws Exception {
         // Check if username or email already exists

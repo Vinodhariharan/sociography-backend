@@ -7,6 +7,8 @@ import com.example.sociography.repository.PictureRepository;
 import com.example.sociography.repository.FollowerRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +28,10 @@ public class PhotographerService {
 
     public List<Photographer> findAll() {
         return photographerRepository.findAll();
+    }
+
+    public Page<Photographer> findPaginated(int page, int size) {
+        return photographerRepository.findAll(PageRequest.of(page, size));
     }
 
     public Optional<Photographer> findById(Integer id) {

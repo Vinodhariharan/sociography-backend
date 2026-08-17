@@ -7,6 +7,8 @@ import com.example.sociography.repository.CommentRepository;
 import com.example.sociography.repository.PhotographerRepository;
 import com.example.sociography.repository.PictureRepository;
 import com.example.sociography.service.CommentService;
+import com.example.sociography.util.AuthenticatedUser;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,25 +38,12 @@ public class CommentController {
         return commentService.getCommentsByPictureId(pictureId);
     }
     
-//    @PostMapping
-//    public Comment addComment(@PathVariable int pictureId, @RequestBody Comment comment) {
-//        Picture picture = pictureRepository.findById(pictureId).orElseThrow(() -> new RuntimeException("Picture not found"));
-//        Photographer photographer = photographerRepository.findById(picture.getPhotographer().getId())
-//                .orElseThrow(() -> new RuntimeException("Photographer not found"));
-//
-//        comment.setPicture(picture);
-//        comment.setPhotographer(photographer);
-//        comment.setTimestamp(LocalDateTime.now());
-//
-//        return commentRepository.save(comment);
-//    }
-
     @PostMapping
-    public Comment addComment(@PathVariable int pictureId, @RequestBody Comment comment) {
+    public Comment addComment(@PathVariable int pictureId, @RequestBody Comment comment, HttpServletRequest request) {
         Picture picture = pictureRepository.findById(pictureId)
             .orElseThrow(() -> new RuntimeException("Picture not found"));
 
-        Photographer photographer = photographerRepository.findById(comment.getPhotographer().getId())
+        Photographer photographer = photographerRepository.findById(AuthenticatedUser.getId(request))
             .orElseThrow(() -> new RuntimeException("Photographer not found"));
 
         comment.setPicture(picture);
