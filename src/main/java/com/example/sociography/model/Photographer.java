@@ -2,7 +2,6 @@ package com.example.sociography.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @Table(name = "Photographers")
@@ -41,9 +40,6 @@ public class Photographer {
     @Column(name = "ph_email")
     private String email;
 
-    @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Follower> followers;
-    
 	public int getId() {
 		return id;
 	}

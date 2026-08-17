@@ -9,6 +9,8 @@ import com.example.sociography.repository.PictureRepository;
 import com.example.sociography.repository.LikeRepository;
 import com.example.sociography.repository.PhotographerRepository;
 import com.example.sociography.service.LikeService;
+import com.example.sociography.util.AuthenticatedUser;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,10 +48,9 @@ public class LikeController {
     }
 
     @PostMapping
-    public Like addLike(@RequestBody LikeRequest likeRequest) {
+    public Like addLike(@RequestBody LikeRequest likeRequest, HttpServletRequest request) {
         int pictureId = likeRequest.getPictureId();
-        int photographerId = likeRequest.getPhotographerId();
-        System.out.print(pictureId);
+        int photographerId = AuthenticatedUser.getId(request);
         Picture picture = pictureRepository.findById(pictureId)
                 .orElseThrow(() -> new RuntimeException("Picture not found"));
         Photographer photographer = photographerRepository.findById(photographerId)
@@ -61,13 +62,13 @@ public class LikeController {
         like.setPicture(picture);
         like.setPhotographer(photographer);
         like.setTimestamp(LocalDateTime.now());
-        
+
         return likeRepository.save(like);
     }
 
     @DeleteMapping
-    public void removeLike(@RequestBody LikeRequest likeRequest) {
-        LikeId likeId = new LikeId(likeRequest.getPictureId(), likeRequest.getPhotographerId());
+    public void removeLike(@RequestBody LikeRequest likeRequest, HttpServletRequest request) {
+        LikeId likeId = new LikeId(likeRequest.getPictureId(), AuthenticatedUser.getId(request));
         Like like = likeService.findById(likeId)
                 .orElseThrow(() -> new RuntimeException("Like not found"));
 
@@ -75,7 +76,7 @@ public class LikeController {
     }
 
     @PostMapping("/check")
-    public boolean checkIfLiked(@RequestBody LikeRequest likeRequest) {
-        return likeService.findById(new LikeId(likeRequest.getPictureId(), likeRequest.getPhotographerId())).isPresent();
+    public boolean checkIfLiked(@RequestBody LikeRequest likeRequest, HttpServletRequest request) {
+        return likeService.findById(new LikeId(likeRequest.getPictureId(), AuthenticatedUser.getId(request))).isPresent();
     }
 }
