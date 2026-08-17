@@ -25,14 +25,14 @@ The matching client is [sociography-frontend](https://github.com/vinodhariharan/
 
 ## Tech Stack
 - Spring Boot 3 (Java 17)
-- Spring Data JPA + MySQL
+- Spring Data JPA + PostgreSQL
 - Spring Security + JWT (`jjwt`)
 
 ## Getting Started
 
 ### Prerequisites
 - Java 17
-- MySQL server running
+- PostgreSQL server running
 
 ### Setup
 1. Clone the repository:
@@ -40,15 +40,16 @@ The matching client is [sociography-frontend](https://github.com/vinodhariharan/
    git clone https://github.com/vinodhariharan/sociography-backend.git
    cd sociography-backend
    ```
-2. Configure the database and JWT secret. Defaults in `application.properties` work against a local MySQL instance (`root`/`12345` on `localhost:3306/sociography`); override any of them via environment variables for anything beyond local dev:
-   - `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`
+2. Configure the database and JWT secret. Defaults in `application.properties` work against a local PostgreSQL instance (`postgres`/`postgres` on `localhost:5432/sociography`); override any of them via environment variables for anything beyond local dev:
+   - `DB_URL`, `DB_USERNAME`, `DB_PASSWORD` — e.g. your Supabase connection details
    - `JWT_SECRET`
    - `CORS_ALLOWED_ORIGINS` — comma-separated list of frontend origins allowed to call the API (defaults to `http://localhost:3000`)
+   - `PORT` — set automatically by most hosts (e.g. Render); defaults to `8080` locally
 3. Run the application:
    ```
    mvn spring-boot:run
    ```
-   The API listens on port `8080`.
+   The API listens on port `8080` locally (or `$PORT` when set).
 
 ## Contributing
 
