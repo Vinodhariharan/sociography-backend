@@ -7,6 +7,7 @@ import com.example.sociography.repository.PhotographerRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -22,24 +23,20 @@ public class AuthService {
     @Autowired
     private PhotographerRepository photographerRepository;
 
-    public String authenticate(String email, String password) {
-        System.out.println("Authenticating user: " + email);
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
+    public String authenticate(String email, String password) {
         Photographer photographer = photographerRepository.findByEmail(email);
-        System.out.println("Photographer found: " + (photographer != null));
-        if (photographer != null && photographer.getPassword().equals(password)) {
-            System.out.println("Photographer authenticated successfully");
+        if (photographer != null && passwordEncoder.matches(password, photographer.getPassword())) {
             return generateToken(photographer.getId(), email, "photographer");
         }
 
         Partner partner = partnerRepository.findByEmail(email);
-        System.out.println("Partner found: " + (partner != null));
-        if (partner != null && partner.getPassword().equals(password)) {
-            System.out.println("Partner authenticated successfully");
+        if (partner != null && passwordEncoder.matches(password, partner.getPassword())) {
             return generateToken(partner.getId(), email, "partner");
         }
 
-        System.out.println("Authentication failed for user: " + email);
         return null;
     }
 
